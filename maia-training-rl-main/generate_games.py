@@ -38,6 +38,7 @@ load_dotenv()
 myclient = pymongo.MongoClient(os.getenv('MONGODB_CONNECTION_STRING') or "INVALID")
 mydb = myclient[os.getenv('DB_NAME') or "test"]
 mycol = mydb[os.getenv('COLLECTION_NAME') or "training_games"]
+LC0 = os.getenv('LC0_PATH') or "lc0"
 
 # some config to change
 name_of_run="genlogs/"+"name_of_run"
@@ -187,12 +188,12 @@ def worker(partner1_name, partner2_name, partner1_weights, partner2_weights,i,q)
     print(f"Worker {i} starting...")
     open(name_of_run+'/trash'+str(i), 'a').close()
     sys.stderr = open(name_of_run+'/trash'+str(i), 'w')
-    maiay=agent('m11',["lc0" , "--temperature=1", "--weights="+MAIA_WEIGHTS, "--backend-opts=gpu="+str((i//2)%4)],1)
-    partnery=agent(partner1_name,["lc0" , "--weights="+partner1_weights, "--backend-opts=gpu="+str((i//2)%4)], NUM_LC0_NODES) 
+    maiay=agent('m11',[LC0 , "--temperature=1", "--weights="+MAIA_WEIGHTS, "--backend-opts=gpu="+str((i//2)%4)],1)
+    partnery=agent(partner1_name,[LC0 , "--weights="+partner1_weights, "--backend-opts=gpu="+str((i//2)%4)], NUM_LC0_NODES) 
     team1=team(maiay,partnery,0.5)
     
-    maiay2=agent('m11_2',["lc0", "--temperature=1", "--weights="+MAIA_WEIGHTS, "--backend-opts=gpu="+str((i//2)%4)],1)
-    partnery2=agent(partner2_name+'_2',["lc0", "--weights="+partner2_weights, "--backend-opts=gpu="+str((i//2)%4)], NUM_LC0_NODES)   
+    maiay2=agent('m11_2',[LC0, "--temperature=1", "--weights="+MAIA_WEIGHTS, "--backend-opts=gpu="+str((i//2)%4)],1)
+    partnery2=agent(partner2_name+'_2',[LC0, "--weights="+partner2_weights, "--backend-opts=gpu="+str((i//2)%4)], NUM_LC0_NODES)   
     team2=team(maiay2,partnery2,0.5)
 
     print(f"Worker {i}: Both teams created, starting game loop...")
@@ -274,7 +275,7 @@ if __name__=="__main__":
 
     # print("Testing Lc0 Maia engine creation...")
     # try:
-    #     test_engine = chess.engine.SimpleEngine.popen_uci(["lc0", "--backend=metal", "--weights=../maia-partner/models/maia-1100.pb.gz"])
+    #     test_engine = chess.engine.SimpleEngine.popen_uci([LC0, "--backend=metal", "--weights=../maia-partner/models/maia-1100.pb.gz"])
     #     print("Test engine created successfully")
     #     test_engine.quit()
     #     print("Test engine closed successfully")
@@ -284,7 +285,7 @@ if __name__=="__main__":
 
     # print("Testing Lc0 Leela engine creation...")
     # try:
-    #     test_engine = chess.engine.SimpleEngine.popen_uci(["lc0", "--backend=metal", "--weights=../maia-partner/models/128x10-t60-2-5300.pb.gz"])
+    #     test_engine = chess.engine.SimpleEngine.popen_uci([LC0, "--backend=metal", "--weights=../maia-partner/models/128x10-t60-2-5300.pb.gz"])
     #     print("Test engine 2 created successfully")
     #     test_engine.quit()
     #     print("Test engine 2 closed successfully")
