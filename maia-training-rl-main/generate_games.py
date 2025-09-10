@@ -39,13 +39,14 @@ myclient = pymongo.MongoClient(os.getenv('MONGODB_CONNECTION_STRING') or "INVALI
 mydb = myclient[os.getenv('DB_NAME') or "test"]
 mycol = mydb[os.getenv('COLLECTION_NAME') or "training_games"]
 LC0 = os.getenv('LC0_PATH') or "lc0"
+MAIA_WEIGHTS = os.getenv('MAIA_WEIGHTS_PATH') or "../maia-partner/models/maia-1100.pb.gz"
+PARTNER1_PATH = os.getenv('PARTNER1_WEIGHTS_PATH') or "../maia-partner/models/128x10-t60-2-5300.pb.gz"
+PARTNER2_PATH = os.getenv('PARTNER2_WEIGHTS_PATH') or "../maia-partner/models/128x10-t60-2-5300.pb.gz"
 
 # some config to change
 name_of_run="genlogs/"+"name_of_run"
 partner_names=['partner1','partner2']
-weight_files=['../maia-partner/models/128x10-t60-2-5300.pb.gz',
-            '../maia-partner/models/128x10-t60-2-5300.pb.gz']
-MAIA_WEIGHTS="../maia-partner/models/maia-1100.pb.gz"
+weight_files=[PARTNER1_PATH,PARTNER2_PATH]
 
 def allmax(a):
     if len(a) == 0:
